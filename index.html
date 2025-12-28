@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قزووومييي 🤍</title>
+<style>
+:root { --pink1:#ff4b6e; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle, #0a0012, #2a003a, #14001f);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Tahoma, sans-serif;
+  color: white;
+}
+
+#container { text-align: center; max-width: 92%; z-index: 2; position: relative; }
+
+h1 { font-size: clamp(2.2rem, 6vw, 3.2rem); margin-bottom: 20px; letter-spacing: 2px; text-shadow: 0 0 15px rgba(255,154,158,.6); }
+
+p { font-size: clamp(1.1rem, 3.8vw, 1.4rem); line-height: 1.9; }
+
+button {
+  margin-top: 28px; padding: 14px 42px; font-size: 1.05em; border: none; border-radius: 40px;
+  background: linear-gradient(45deg, var(--pink1), #ff9a9e); color: #000; cursor: pointer; transition: all 0.3s; display:none;
+}
+
+button:hover { transform: scale(1.12) rotate(-2deg); box-shadow: 0 0 20px rgba(255,154,158,.8); }
+
+.heart, .firework { position: absolute; pointer-events: none; user-select: none; color: var(--pink1); }
+</style>
+</head>
+<body>
+
+<audio id="music" loop preload="auto">
+  <source src="preview.mp3" type="audio/mpeg">
+</audio>
+
+<div id="container">
+  <h1 id="name"></h1>
+  <p id="message"></p>
+  <div id="counter"></div>
+  <button id="finalBtn">Click here 🤍</button>
+</div>
+
+<script>
+const nameText = "SHAHAD";
+const messageText = `
+Today is not just another day.
+Today is the birthday of someone whose name smiles even when written 💗
+
+your presence feels different,
+your smile feels like home,
+and every year you remain the best thing that ever happened to my life.
+`;
+
+const containerEl = document.getElementById("container");
+const nameEl = document.getElementById("name");
+const messageEl = document.getElementById("message");
+const counterEl = document.getElementById("counter");
+const finalBtn = document.getElementById("finalBtn");
+const musicEl = document.getElementById("music");
+const startDate = new Date("2018-01-01");
+
+// عداد الأيام منذ أول لقاء
+function updateCounter(){
+  const diff = Math.floor((Date.now() - startDate) / 86400000);
+  counterEl.innerHTML = `Since the day we first met… <b>${diff}</b> days of smiling because of you 🤍`;
+}
+updateCounter();
+setInterval(updateCounter, 60000);
+
+
+// كتابة الاسم حرف حرف أولاً
+let nameIndex = 0;
+function typeName() {
+  if(nameIndex < nameText.length) {
+    nameEl.innerHTML += nameText.charAt(nameIndex++);
+    setTimeout(typeName, 200);
+  } else {
+    typeMessage(); // بعد الاسم يبدأ ظهور الرسالة
+  }
+}
+
+// كتابة الرسالة حرف حرف
+let msgIndex = 0;
+function typeMessage() {
+  if(msgIndex < messageText.length) {
+    let char = messageText.charAt(msgIndex++);
+    if(char === "\n") char = "<br>";
+    messageEl.innerHTML += char;
+    setTimeout(typeMessage, 50);
+  } else {
+    finalBtn.style.display = "inline-block"; // إظهار الزر بعد الرسالة
+  }
+}
+typeName(); // بدء كتابة الاسم
+
+// قلوب عائمة
+setInterval(() => {
+  createHeart(Math.random()*100, -20, Math.random()*20 + 16, 5 + Math.random()*3);
+}, 200);
+
+function createHeart(x, y, size, duration){
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.innerHTML = "❤";
+  h.style.left = x + "vw";
+  h.style.bottom = y + "px";
+  h.style.fontSize = size + "px";
+  h.animate([{ transform: `translateY(0) scale(1)`, opacity: 1 }, { transform: `translateY(-900px) scale(1.8)`, opacity: 0 }],
+            { duration: duration*1000, iterations: 1 });
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(), duration*1000);
+}
+
+// ألعاب نارية
+function createFirework() {
+  const x = Math.random() * window.innerWidth;
+  const y = Math.random() * window.innerHeight / 2;
+  const colors = ["#ff4b6e","#ff9a9e","#ffeb3b","#00ffff","#ff7eb3"];
+  for(let i=0;i<20;i++){
+    const f = document.createElement("div");
+    f.className = "firework";
+    f.style.left = x + "px";
+    f.style.top = y + "px";
+    f.style.width = f.style.height = "6px";
+    f.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+    f.style.borderRadius = "50%";
+    f.animate([{ transform: "translate(0,0)", opacity:1 },
+               { transform: `translate(${Math.random()*200-100}px,${Math.random()*200-100}px)`, opacity:0 }],
+              { duration: 800 + Math.random()*400, iterations:1 });
+    document.body.appendChild(f);
+    setTimeout(()=> f.remove(), 1200);
+  }
+}
+
+// تفعيل الصوت
+function enableAudio() {
+  musicEl.play().catch(()=>{});
+  document.removeEventListener("click", enableAudio);
+  document.removeEventListener("touchstart", enableAudio);
+}
+document.addEventListener("click", enableAudio);
+document.addEventListener("touchstart", enableAudio);
+
+// الزر النهائي
+finalBtn.addEventListener("click", () => {
+  musicEl.play().catch(()=>{});
+  messageEl.style.display = "none";
+  finalBtn.style.display = "none";
+  counterEl.style.display = "none";
+
+  containerEl.innerHTML += `<h1 id="birthdayMsg">Happy Birthday قزووومييي 💕</h1>`;
+  const birthdayMsgEl = document.getElementById("birthdayMsg");
+
+  const fireInterval = setInterval(createFirework, 200);
+
+  setTimeout(() => {
+    birthdayMsgEl.innerHTML = `طويلانك يحبك 💖`;
+    clearInterval(fireInterval);
+  }, 5000);
+});
+// إعادة تحميل الصفحة تلقائياً بعد 60 ثانية
+setTimeout(() => {
+  location.reload();
+}, 60000); // 60000 ملي ثانية = 60 ثانية
+
+</script>
+</body>
+</html>
